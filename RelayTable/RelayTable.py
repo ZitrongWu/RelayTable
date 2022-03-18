@@ -18,6 +18,9 @@ def main():
     head = table[0][1:]
     for r,row in enumerate(table[1:]):
         for c,model in enumerate(row[1:]):
+            head[c].lstrip()
+            head[c].rstrip()
+            head[c] = head[c].replace(" ","")
             relaytable[head[c]+"->"+model]=""
     print(relaytable)
 
