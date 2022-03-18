@@ -17,14 +17,15 @@ def main():
     relaytable = {}
     head = table[0][1:]
     relay_count = 0
+
     for r,row in enumerate(table[1:]):
         for c,model in enumerate(row[1:]):
-            line = head[c]
+            line = str(head[c])+"->"+str(model)
             line.lstrip()
             line.rstrip()
             line = line.replace(" ","")
             if not(relaytable.__contains__(line)):
-                relaytable[line+"->"+model]=relay_count
+                relaytable[line]=relay_count
                 relay_count = relay_count + 1
     print(relaytable)
 
