@@ -24,7 +24,7 @@ def main():
             line.rstrip()
             line = line.replace(" ","")
             if not(relaytable.__contains__(line)):
-                relaytable[head[c]+"->"+model]=relay_count
+                relaytable[line+"->"+model]=relay_count
                 relay_count = relay_count + 1
     print(relaytable)
 
