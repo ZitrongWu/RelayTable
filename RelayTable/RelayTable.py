@@ -51,7 +51,7 @@ def main():
 
 
     with pd.ExcelWriter(fileNameStr,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
-        table.to_excel(writer,sheet_name = "Sheet1",index=False)
+        table.to_excel(writer,sheet_name = "Sheet3",index=False)
         relaytable_df.to_excel(writer,sheet_name = "Sheet2",index=False)
 
 
