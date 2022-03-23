@@ -21,6 +21,7 @@ def main():
 
     for r,row in enumerate(Test_plan.values):
 
+
         for c,model in enumerate(row[1:]):
 
             model.strip(' ')          
@@ -44,47 +45,20 @@ def main():
 
     contact_count = 0
 
-    Relays_dic = {"Relay":[],"Contact":[]}
+    Relays_dic = {"Relay":[]}
 
 
-    #compaire each column of test plan to find the syced net
-    # for i,(label,nets) in enumerate(Test_plan.iloc[:,1:].items()):
-    #     for label_c,nets_c in Test_plan.iloc[:,i+2:].items():
-    #         same = nets==nets_c
-    #         diff = nets!=nets_c
-    #         diff_net = nets.loc[diff]
-    #         same_net = nets.loc[same]
-    #         syc = pd.Series()
-    #         for ind,val in diff_net.items():
-    #             syc &= same_net != val
-    #         print(syc)
 
-
-    for i,(label,nets) in enumerate(Test_plan.iloc[:,1:].items()):
-        for label_c,nets_c in Test_plan.iloc[:,i+2:].items():
-
-            same = nets==nets_c
-            diff = not(same)
-            diff_net = nets.loc[diff]
-            same_net = nets.loc[same]
-            syc = pd.Series(np.ones(nets.shape),dtype=bool)
-            for ind,val in diff_net.items():
-                syc &= same_net != val
-
-            syc_net = nets.loc[syc].drop_duplicates(inplace=False)
-            asyc = not(syc)
-            asyc_net = nets.loc[asyc].drop_duplicates(inplace=False)
    
-    # for ind,val in syc_net.items:
 
 
-    for r in relaytable_dic.iterrows:
 
+    for i in range(relaytable_df.shape[0]):
         Relays_dic["Relay"].append(f'K{relay_count}')
 
         relay_count += 1
 
-        Relays_dic["Contact"].append(f'K{1}')
+        # Relays_dic["Contact"].append(f'K{1}')
         
 
 
@@ -92,12 +66,32 @@ def main():
 
     relaytable_df = pd.concat([relaytable_df,Relays],axis = 1)#connet the relay table with the relay list
 
+
+
+
+    #compaire each column of test plan to find the syced net
+    for i,(label,nets) in enumerate(Test_plan.iloc[:,1:].items()):
+        for label_c,nets_c in Test_plan.iloc[:,i+2:].items():
+
+            same = nets==nets_c
+            diff = nets!=nets_c
+            diff_net = nets.loc[diff]
+            same_net = nets.loc[same]
+            syc = pd.Series(np.ones(nets.shape),dtype=bool)
+            for ind,val in diff_net.items():
+                syc &= same_net != val
+
+            syc_net = nets.loc[syc].drop_duplicates(inplace=False)
+           
+            
+            if not syc_net.empty:
+                for i,snet in syc_net.items():    
+                    relaytable_df.loc[(relaytable_df.loc[:,"Net_A"]==label)|(relaytable_df.loc[:,"Net_A"]==label_c) &(relaytable_df.loc[:,"Net_B"]==snet),"Relay"] = f'K{relay_count}'
+                    relay_count +=1
     print("Relay table:")
     print(relaytable_df)
 
 
-
-     
 
     # find out which relay should be terned on for each test and record in the tabel
 
