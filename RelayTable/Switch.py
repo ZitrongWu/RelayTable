@@ -1,4 +1,4 @@
-import RelayTable.Net as Net
+import RelayTable.Pin as Pin
 import RelayTable.Relay as Relay
 
 class Switch:
@@ -10,7 +10,7 @@ class Switch:
             self.name = f'Switchnet{self.number}'
         else:
             self.name = name
-        self.const = Net(f'Switchnet{self.number}C')
+        self.const = Pin(f'Switchnet{self.number}C')
         self.relays = []
-    def addto(self,net:Net,rel:Relay):
+    def addto(self,net:Pin,rel:Relay):
         self.relay = []
