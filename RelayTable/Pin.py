@@ -8,8 +8,8 @@ class Pin:
             self.name = f'Net{self.number}'
         else:
             self.name = name
-    def __str__(self):
-        return f'Pin{self.number},name:{self.name},net:{self.net.name}'
+    def __repr__(self):
+        return f'Pin{self.number}_{self.name}_{self.net.name}'
 def connect(pinself:Pin,pin:Pin,netname = ""):
     if netname == "":
         pinself.net = Net() 
@@ -22,10 +22,10 @@ def connect(pinself:Pin,pin:Pin,netname = ""):
 def main():
     pin1 = Pin("pin1")
     pin2 = Pin("pin2")
-    connect(pin1,pin2,"new net")
-    print("Test")
-    print(pin1)
-    print(pin2)
+    connect(pin1,pin2,"newnet")
+    # print("Test")
+    # print(pin1)
+    # print(pin2)
     print(pin1.net.pins)
    
 if __name__ == '__main__':
