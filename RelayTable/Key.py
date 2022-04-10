@@ -12,4 +12,5 @@ class key:
         self.inline = Pin(self.name + 'I')
         self.copen = Pin(self.name + 'CO')
         self.cclose = Pin(self.name + 'CC')
-
+    def __repr__(self):
+        return f'{self.inline.net}-K{self.number}-{self.copen.net}-{self.cclose.net}'

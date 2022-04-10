@@ -9,6 +9,8 @@ class Net:
             self.name = f'K{self.number}'
         else:
             self.name = name    
+    def __repr__(self):
+        return self.name
 
 
 class Pin:

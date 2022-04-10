@@ -19,7 +19,7 @@ def resolve(pinA:Pin,pinlist:list):
         return       
     n = 0
     keyinlinlist = list()
-    while n+1<=len(pinlist):
+    while n+1<=len(pinlist)-1:
         newkey = key()
         keylist.append(newkey)
         keyinlinlist.append(newkey.inline)
@@ -37,7 +37,7 @@ def main():
     pin4 = Pin()
     pin5 = Pin()
     resolve(pinA,[pin1,pin2,pin3,pin4,pin5])
-    print()
+    print(keylist)
    
 if __name__ == '__main__':
     main()
