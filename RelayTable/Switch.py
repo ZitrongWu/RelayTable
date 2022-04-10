@@ -36,7 +36,9 @@ def main():
     pin3 = Pin()
     pin4 = Pin()
     pin5 = Pin()
+
     resolve(pinA,[pin1,pin2,pin3,pin4,pin5])
+    print(pinA.net,pin1.net,pin2.net,pin3.net,pin4.net,pin5.net)    
     print(keylist)
    
 if __name__ == '__main__':
