@@ -19,15 +19,12 @@ def connect(pinself:Pin,pin:Pin,netname = ""):
     pinself.net.pins.append(pin)
     pin.net = pinself.net
 
-def main():
-    pin1 = Pin("pin1")
-    pin2 = Pin("pin2")
-    connect(pin1,pin2,"newnet")
-    # print("Test")
-    # print(pin1)
-    # print(pin2)
-    print(pin1.net.pins)
+# def main():
+#     pin1 = Pin("pin1")
+#     pin2 = Pin("pin2")
+#     connect(pin1,pin2,"newnet")
+#     print(pin1.net.pins)
    
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
