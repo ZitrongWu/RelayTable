@@ -1,16 +1,43 @@
-import RelayTable.Pin as Pin
-import RelayTable.Relay as Relay
+from Key import key
+from Pin import Pin,Net,connect
+keylist = list()
+def resolve(pinA:Pin,pinlist:list):
+    if len(pinlist) == 0:
+        return
+    if len(pinlist) == 1:
+        newkey = key()
+        keylist.append(newkey)
+        connect(newkey.copen,pinlist[0])        
+        connect(pinA,newkey.inline)
+        return
+    if len(pinlist) == 2:
+        newkey = key()
+        keylist.append(newkey)
+        connect(newkey.copen,pinlist[0]) 
+        connect(newkey.cclose,pinlist[1])       
+        connect(pinA,newkey.inline)
+        return       
+    n = 0
+    keyinlinlist = list()
+    while n+1<=len(pinlist):
+        newkey = key()
+        keylist.append(newkey)
+        keyinlinlist.append(newkey.inline)
+        connect(newkey.copen,pinlist[n])
+        connect(newkey.cclose,pinlist[n+1])
+        n+=2
+    resolve(pinA,keyinlinlist+pinlist[n:])
+    return
 
-class Switch:
-    count = -1
-    def __init__(self, name=""):
-        Switch.count +=1
-        self.number = Switch.count
-        if name == "":
-            self.name = f'Switchnet{self.number}'
-        else:
-            self.name = name
-        self.const = Pin(f'Switchnet{self.number}C')
-        self.relays = []
-    def addto(self,net:Pin,rel:Relay):
-        self.relay = []
+def main():
+    pinA = Pin()
+    pin1 = Pin()
+    pin2 = Pin()
+    pin3 = Pin()
+    pin4 = Pin()
+    pin5 = Pin()
+    resolve(pinA,[pin1,pin2,pin3,pin4,pin5])
+    print()
+   
+if __name__ == '__main__':
+    main()

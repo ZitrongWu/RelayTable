@@ -16,11 +16,11 @@ class Pin:
     def __init__(self, name=""):
         Pin.count +=1
         self.number = Pin.count
-        self.net = Net(f'NetP{self.number}')
         if name == "":
             self.name = f'Pin{self.number}'
         else:
             self.name = name
+        self.net = Net(f'NetP{self.name}')
     def __repr__(self):
         return f'Pin{self.number}_{self.name}_{self.net.name}'
 
@@ -34,12 +34,12 @@ def connect(pinself:Pin,pin:Pin,netname = ""):
 
 
 
-def main():
-    pin1 = Pin()
-    pin2 = Pin()
-    connect(pin1,pin2,"newnet")
-    print(pin1.net.pins)
+# def main():
+#     pin1 = Pin()
+#     pin2 = Pin()
+#     connect(pin1,pin2,"newnet")
+#     print(pin1.net.pins)
    
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 

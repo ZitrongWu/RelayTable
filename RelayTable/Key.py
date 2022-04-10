@@ -1,10 +1,10 @@
-import RelayTable.Pin as Pin
-class Relay:
+from Pin import Pin,Net,connect
+class key:
     "A Relay class"
     count = -1
     def __init__(self, name=""):
-        Relay.count +=1
-        self.number = Relay.count
+        key.count +=1
+        self.number = key.count
         if name == "":
             self.name = f'K{self.number}'
         else:
@@ -12,9 +12,4 @@ class Relay:
         self.inline = Pin(self.name + 'I')
         self.copen = Pin(self.name + 'CO')
         self.cclose = Pin(self.name + 'CC')
-    def connect(self,inl:Pin, copen:Pin, cc:Pin):
-        self.inline = inl
-        self.copen = copen
-        self.cclose = cc
-    
 
