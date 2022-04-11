@@ -24,7 +24,8 @@ class Pin:
             self.name = name
         self.net = Net(f'NetP{self.name}')
     def __repr__(self):
-        return f'Pin{self.number}_{self.name}_{self.net.name}'
+        # return f'Pin{self.number}_{self.name}_{self.net.name}'
+        return f'Pin{self.number}_{self.name}'
 
 def connect(pinself:Pin,pin:Pin,netname = ""):
     if netname != "":
