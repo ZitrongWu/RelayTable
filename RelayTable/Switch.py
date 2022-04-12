@@ -46,9 +46,22 @@ class Switch:
         self.source = source.net
         self.target = [t.net for t in target]     
         self.__resolve_kernle__(self.source,self.target)
-    def find(slef,pinA:Pin,pinb:Pin)->list:
-        pass
-
+    def __find_kernel__(self,dist:Net):
+        if dist == self.source:
+            return
+        for p in dist.pins:
+            for k in self.keylist:
+                if k == p.component:#if we find the connected key
+                    if p == k.copen:#if the net was connected to constant open pin, add to action
+                        self.__actionlist__.append(k)
+                    self.__find_kernel__(k.inline.net)
+                    return
+    def find(self,dist:Net)->list:
+        if dist not in self.target:
+            return        
+        self.__actionlist__ = list()
+        self.__find_kernel__(dist)
+        return self.__actionlist__
 # def main():
 #     pinA = Pin()
 #     pin1 = Pin()

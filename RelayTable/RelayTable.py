@@ -8,22 +8,32 @@ def main():
     # read data frome excel store in table
     fileNameStr = "RelayTable/RelayTable.xlsx"
     Test_plan = pd.read_excel(fileNameStr,engine="openpyxl",sheet_name = 'Sheet1')
-    netdict = dict()
+    pindict = dict()
+    networklist = list()
     for p,s in Test_plan.iloc[:,1:].items():
         sourcepin = list()
         pin = sw.Pin(s.name)
         for source in s.to_numpy():
-            if source not in netdict:
-                netdict[source] = sw.Pin(source) 
-            if netdict[source] not in sourcepin:
-                sourcepin.append(netdict[source])
-        # sourcepin.append(sw.Pin("FLOAT"))
-        # print("Chip pin:",pin)
-        # print("Switch to:",sourcepin)
+            if source not in pindict:
+                pindict[source] = sw.Pin(source) 
+            if pindict[source] not in sourcepin:
+                sourcepin.append(pindict[source])
+
         network=sw.Switch(pin)
         network.resolve(pin,sourcepin)
-        # print("solusion:",network.keylist)
-        print(network)
+        networklist.append(network)
+        # print(network)
+
+    action = list()
+    targetpin = Test_plan.iloc[1,1:].to_numpy()
+    print(targetpin)
+    for i,t in enumerate(targetpin):
+        action.append(networklist[i].find(pindict[t].net))
+        # print(networklist[i].target)
+
+    print(action)
+    
+    
     #write back to excel
 
     # with pd.ExcelWriter(fileNameStr,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:

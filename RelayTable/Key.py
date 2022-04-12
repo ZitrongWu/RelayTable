@@ -22,4 +22,5 @@ class key(Component):
         self.cclose.component = self
         self.pinlist.append(self.cclose)
     def __repr__(self):
-        return f'{self.inline.net}-K{self.number}-{self.copen.net}-{self.cclose.net}'
+        # return f'{self.inline.net}-K{self.number}-{self.copen.net}-{self.cclose.net}'
+        return self.name
