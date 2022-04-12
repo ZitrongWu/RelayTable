@@ -25,6 +25,7 @@ def main():
         # print(network)
 
     
+    
     for n in range(Test_plan.shape[0]):
         action = list()
         targetpin = Test_plan.iloc[n,1:].to_numpy()

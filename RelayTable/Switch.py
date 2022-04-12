@@ -23,8 +23,8 @@ class Switch:
         if len(targetnet) == 2:
             newkey = key()
             self.keylist.append(newkey)
-            connect(newkey.copen,targetnet[0]) 
-            connect(newkey.cclose,targetnet[1])       
+            connect(newkey.cclose,targetnet[0]) 
+            connect(newkey.copen,targetnet[1])       
             connect(newkey.inline,self.source)
             return       
         n = 0
@@ -33,8 +33,8 @@ class Switch:
             newkey = key()
             self.keylist.append(newkey)
             keyinlinlist.append(newkey.inline.net)
-            connect(newkey.copen,targetnet[n])
-            connect(newkey.cclose,targetnet[n+1])
+            connect(newkey.cclose,targetnet[n])
+            connect(newkey.copen,targetnet[n+1])
             n+=2
         self. __resolve_kernle__(sourcenet,keyinlinlist+targetnet[n:])
         return
