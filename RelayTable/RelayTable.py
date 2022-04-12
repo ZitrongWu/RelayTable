@@ -24,14 +24,15 @@ def main():
         networklist.append(network)
         # print(network)
 
-    action = list()
-    targetpin = Test_plan.iloc[1,1:].to_numpy()
-    print(targetpin)
-    for i,t in enumerate(targetpin):
-        action.append(networklist[i].find(pindict[t].net))
-        # print(networklist[i].target)
-
-    print(action)
+    
+    for n in range(Test_plan.shape[0]):
+        action = list()
+        targetpin = Test_plan.iloc[n,1:].to_numpy()
+        print(targetpin)
+        for i,t in enumerate(targetpin):
+            action+=(networklist[i].find(pindict[t].net))
+            # print(networklist[i].target)
+        print(action)
     
     
     #write back to excel
