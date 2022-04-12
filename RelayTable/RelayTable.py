@@ -18,11 +18,12 @@ def main():
             if netdict[source] not in sourcepin:
                 sourcepin.append(netdict[source])
         # sourcepin.append(sw.Pin("FLOAT"))
-        print("Chip pin:",pin)
-        print("Switch to:",sourcepin)
+        # print("Chip pin:",pin)
+        # print("Switch to:",sourcepin)
         network=sw.Switch(pin)
         network.resolve(pin,sourcepin)
-        print("solusion:",network.keylist)
+        # print("solusion:",network.keylist)
+        print(network)
     #write back to excel
 
     # with pd.ExcelWriter(fileNameStr,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:

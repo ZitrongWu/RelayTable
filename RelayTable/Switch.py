@@ -2,7 +2,7 @@ from Key import key
 from Pin import Pin,Net,connect
 class Switch:
     count = -1
-    def __init__(self,name = "") -> None:
+    def __init__(self,name = "",) -> None:
         Switch.count += 1
         if name == "":
             self.name = f'SW{Switch.count}'
@@ -10,34 +10,44 @@ class Switch:
             self.name = name
         self.keylist = list()
     def __repr__(self) -> str:
-        return f'SwitchNet_{self.name}'
-    def resolve(self,pinA:Pin,pinlist:list):
-        if len(pinlist) == 0:
+        return f'Source net:{self.source}\r\nSwitch to {self.target}\r\nSolution:{self.keylist}'
+    def __resolve_kernle__(self,sourcenet:Net,targetnet:list):
+        if len(targetnet) == 0:
             return
-        if len(pinlist) == 1:
+        if len(targetnet) == 1:
             newkey = key()
             self.keylist.append(newkey)
-            connect(newkey.copen,pinlist[0])        
-            connect(pinA,newkey.inline)
+            connect(newkey.copen,targetnet[0])        
+            connect(sourcenet,newkey.inline)
             return
-        if len(pinlist) == 2:
+        if len(targetnet) == 2:
             newkey = key()
             self.keylist.append(newkey)
-            connect(newkey.copen,pinlist[0]) 
-            connect(newkey.cclose,pinlist[1])       
-            connect(pinA,newkey.inline)
+            connect(newkey.copen,targetnet[0]) 
+            connect(newkey.cclose,targetnet[1])       
+            connect(newkey.inline,self.source)
             return       
         n = 0
         keyinlinlist = list()
-        while n+1<=len(pinlist)-1:
+        while n+1<=len(targetnet)-1:
             newkey = key()
             self.keylist.append(newkey)
-            keyinlinlist.append(newkey.inline)
-            connect(newkey.copen,pinlist[n])
-            connect(newkey.cclose,pinlist[n+1])
+            keyinlinlist.append(newkey.inline.net)
+            connect(newkey.copen,targetnet[n])
+            connect(newkey.cclose,targetnet[n+1])
             n+=2
-        self.resolve(pinA,keyinlinlist+pinlist[n:])
+        self. __resolve_kernle__(sourcenet,keyinlinlist+targetnet[n:])
         return
+    def resolve(self,source:Net,target:list,):
+        self.source = source
+        self.target = target
+        self.__resolve_kernle__(self.source,self.target)
+    def resolve(self,source:Pin,target:list,):
+        self.source = source.net
+        self.target = [t.net for t in target]     
+        self.__resolve_kernle__(self.source,self.target)
+    def find(slef,pinA:Pin,pinb:Pin)->list:
+        pass
 
 # def main():
 #     pinA = Pin()

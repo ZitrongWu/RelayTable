@@ -23,16 +23,14 @@ class Pin:
         else:
             self.name = name
         self.net = Net(f'NetP{self.name}')
+        self.component = None
     def __repr__(self):
         # return f'Pin{self.number}_{self.name}_{self.net.name}'
         return f'Pin{self.number}_{self.name}'
 
-def connect(pinself:Pin,pin:Pin,netname = ""):
-    if netname != "":
-        pinself.net.name = netname
-    pin.net = pinself.net
-    pinself.net.pins.append(pinself)
-    pinself.net.pins.append(pin)
+def connect(pin:Pin,net:Net):
+    pin.net = net
+    net.pins.append(pin)
     
 
 
