@@ -1,12 +1,16 @@
 import pandas as pd
 import numpy as np
+import argparse
 import Switch as sw
 
 
 def main():
 
+    parse = argparse.ArgumentParser(description="Generat relay table base on input excel file")
+    parse.add_argument('inputfile',metavar='f',type=str,help='Read from excel file')
+    args = parse.parse_args()
     # read data frome excel store in table
-    fileNameStr = "RelayTable/RelayTable.xlsx"
+    fileNameStr = args.inputfile
     Test_plan = pd.read_excel(fileNameStr,engine="openpyxl",sheet_name = 'Sheet1')
     pindict = dict()
     networklist = list()
