@@ -24,3 +24,5 @@ class key(Component):
     def __repr__(self):
         # return f'{self.inline.net}-K{self.number}-{self.copen.net}-{self.cclose.net}'
         return self.name
+    def __str__(self) -> str:
+        return self.name

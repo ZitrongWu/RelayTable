@@ -28,24 +28,24 @@ def main():
         networklist.append(network)
         # print(network)
 
-    
+    Test_plan["Relay On"]=""
     
     for n in range(Test_plan.shape[0]):
         action = list()
-        targetpin = Test_plan.iloc[n,1:].to_numpy()
+        targetpin = Test_plan.iloc[n,1:-2].to_numpy()
         print(targetpin)
         for i,t in enumerate(targetpin):
             action+=(networklist[i].find(pindict[t].net))
             # print(networklist[i].target)
-        print(action)
-    
+
+        Test_plan['Relay On'].iloc[n] = (",".join(str(k) for k in action))
+        
+    print(Test_plan)
     
     #write back to excel
 
-    # with pd.ExcelWriter(fileNameStr,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
-    #     Test_plan.to_excel(writer,sheet_name = "Sheet3",index=False)
-
-    #     relaytable_df.to_excel(writer,sheet_name = "Sheet2",index=False)
+    with pd.ExcelWriter(fileNameStr,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
+        Test_plan.to_excel(writer,sheet_name = "Sheet1",index=False)
 
 
 
