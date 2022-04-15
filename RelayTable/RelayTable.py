@@ -14,7 +14,10 @@ def main():
     plan.generatekeys()
     print(plan)
     plan.find_sync_keys()
-    print(plan.keygrouplist)
+    plan.connet_keygroup()
+    # print(plan.keygrouplist)
+
+    
     # # read data frome excel store in table
     # fileNameStr = args.inputfile
     # Test_plan = pd.read_excel(fileNameStr,engine="openpyxl",sheet_name = 'Sheet1')

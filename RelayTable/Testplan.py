@@ -1,7 +1,8 @@
+from Pin import Net
 import Switch as sw
 from Key import key
 import pandas as pd
-
+import Component as cm
 class Testplan:
     count = -1
     def __init__(self,fileNameStr:str) -> None:
@@ -54,21 +55,31 @@ class Testplan:
         keylist = self.keylist
         
         while keylist:
-            group = list()
+            group = cm.group()
             ka = keylist[0]
-            group.append(ka)
+            group.list.append(ka)
             keylist.pop(0)
-            print(f'checking {ka}')
             for n,kb in enumerate(keylist):
                 if self.__synccheck__(ka,kb):
-                    group.append(kb)
+                    group.list.append(kb)
                     keylist.pop(n)
 
             self.keygrouplist.append(group)
 
+    def connet_keygroup(self):
+        for n,g in enumerate(self.keygrouplist):
+            # print(g.list[0].pindict["controlA"])
+            net = Net(f'cbit{n}')
+            g.connect("controlA",net)
+            # print(g.list,[k.pindict["controlA"].net for k in g.list])
+
+        # self.__df2__ = pd.DataFrame(self.keylist)
+        # print(self.__df2__)
+
     def write(self):
         with pd.ExcelWriter(self.__filedir__,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
-            self.__df__.to_excel(writer,sheet_name = "Sheet1",index=False)    
+            self.__df__.to_excel(writer,sheet_name = "Sheet1",index=False)   
+            self.__df2__.to_excel(writer,sheet_name = "Sheet2",index=False) 
 
     def __repr__(self) -> str:
         return str(self.__df__)

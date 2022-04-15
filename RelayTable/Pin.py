@@ -27,6 +27,8 @@ class Pin:
     def __repr__(self):
         # return f'Pin{self.number}_{self.name}_{self.net.name}'
         return f'Pin{self.number}_{self.name}'
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 def connect(pin:Pin,net:Net):
     pin.net = net
