@@ -1,4 +1,3 @@
-import imp
 from Pin import Pin,Net,connect
 from Component import Component
 class key(Component):
@@ -26,3 +25,6 @@ class key(Component):
         return self.name
     def __str__(self) -> str:
         return self.name
+
+
+
