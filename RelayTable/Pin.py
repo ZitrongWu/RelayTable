@@ -20,9 +20,10 @@ class Pin:
         self.number = Pin.count
         if name == "":
             self.name = f'Pin{self.number}'
+            self.net = Net(f'NetP{self.name}')
         else:
             self.name = name
-        self.net = Net(f'NetP{self.name}')
+            self.net = Net(name)
         self.component = None
     def __repr__(self):
         # return f'Pin{self.number}_{self.name}_{self.net.name}'

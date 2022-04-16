@@ -1,4 +1,4 @@
-from Pin import Net
+from Pin import Net,Pin
 import Switch as sw
 from Key import key
 import pandas as pd
@@ -12,22 +12,53 @@ class Testplan:
     def read(self):
         self.__df__ = pd.read_excel(self.__filedir__,engine="openpyxl",sheet_name = 'Sheet1')
         self.pindict = dict()
+        self.netdict = dict()
         self.switchlist = list()
         self.keylist = list()
-        for p,s in self.__df__.iloc[:,1:].items():
-            self.sourcepin = list()
-            pin = sw.Pin(s.name)
-            for source in s.to_numpy():
-                if source not in self.pindict:
-                    self.pindict[source] = sw.Pin(source) 
-                if self.pindict[source] not in self.sourcepin:
-                    self.sourcepin.append(self.pindict[source])
+        
+        for p,s in self.__df__.iloc[:,1:-2].items():
+            sourcepindict = dict()
+            pin = Pin(s.name)
+            for sourcename in s.to_numpy():
+                if sourcename not in self.pindict:
+                    # self.pindict[sourcename] = Pin(sourcename) 
+                    self.creatpin(sourcename)
 
+                sourcepindict[sourcename] = self.pindict[sourcename]
+            #rewrit to creat switch
             pinsw=sw.Switch(pin)
-            pinsw.resolve(pin,self.sourcepin)
             self.switchlist.append(pinsw)
-            self.keylist+=pinsw.keylist
-    def generatekeys(self):
+            #end of rewrit to creat switch
+            pinsw.resolve(pin,sourcepindict.values())
+            
+
+                
+            self.keylist+=pinsw.keylist#rewrit to add keys
+        
+        self.creatpin("VCC")
+        for k in self.keylist:
+            k.pindict["controlB"].net = self.pindict["VCC"].net        
+        
+
+        print(self.pindict)
+        print(self.netdict)
+
+    def creatnet(self,name:str)->Net:
+        net = Net(name)
+        self.netdict[name] = net
+        return net
+
+    def creatpin(self,name:str)->Pin:
+        pin = Pin(name)
+        self.addpin(pin) 
+        return pin
+
+    def addpin(self,pin:Pin)->Pin:
+        self.pindict[pin.name] = pin
+        self.netdict[pin.net.name] = pin.net 
+        return pin
+
+    def generate_key_actions(self):
         self.__df__["Relay On"]=""
         self.keyactionlist=list()
         for n in range(self.__df__.shape[0]):
@@ -52,34 +83,49 @@ class Testplan:
 
     def find_sync_keys(self):
         self.keygrouplist = list()
-        keylist = self.keylist
-        
-        while keylist:
-            group = cm.group()
-            ka = keylist[0]
-            group.list.append(ka)
-            keylist.pop(0)
-            for n,kb in enumerate(keylist):
-                if self.__synccheck__(ka,kb):
-                    group.list.append(kb)
-                    keylist.pop(n)
-
-            self.keygrouplist.append(group)
+        # keylist = self.keylist
+        __templist__ = list([1 for k in self.keylist])
+        for n,ka in enumerate(self.keylist):
+            if __templist__[n]:
+                group = cm.group()
+                # print(f'ka={ka}')
+                group.list.append(ka)
+                __templist__[n]=0
+                for m,kb in enumerate(self.keylist[n+1:]):
+                    if __templist__[m+n+1]:
+                        # print(f'kb={kb}')
+                        if self.__synccheck__(ka,kb):
+                            group.list.append(kb)
+                            __templist__[m+n+1]=0
+                # print(group.list)
+                self.keygrouplist.append(group)
 
     def connet_keygroup(self):
         for n,g in enumerate(self.keygrouplist):
             # print(g.list[0].pindict["controlA"])
-            net = Net(f'cbit{n}')
-            g.connect("controlA",net)
-            # print(g.list,[k.pindict["controlA"].net for k in g.list])
+            # net = Net(f'cbit{n}')
+            pin = self.creatpin(f'cbit{n}')
+            g.connect("controlA",pin.net)
+            
+            print(g.list,[k.pindict["controlA"].net for k in g.list])
 
-        # self.__df2__ = pd.DataFrame(self.keylist)
-        # print(self.__df2__)
+        self.__savetodf__()
+        
+    def __savetodf__(self):
+        if not self.keylist:
+            return
+        d = {"Relays":self.keylist}
+        for pinnam in self.keylist[0].pindict:
+            # print(pinnam)
+            d[pinnam] = [k.pindict[pinnam].net for k in self.keylist]
+        # print(d)
+        self.__pintable__ = pd.DataFrame(d)
+        # print(self.__pintable__)
 
     def write(self):
         with pd.ExcelWriter(self.__filedir__,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
             self.__df__.to_excel(writer,sheet_name = "Sheet1",index=False)   
-            self.__df2__.to_excel(writer,sheet_name = "Sheet2",index=False) 
+            self.__pintable__.to_excel(writer,sheet_name = "Sheet2",index=False) 
 
     def __repr__(self) -> str:
         return str(self.__df__)
