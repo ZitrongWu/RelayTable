@@ -69,7 +69,7 @@ class Testplan:
                 action+=(self.switchlist[i].find(self.pindict[t].net))
                 # print(networklist[i].target)
 
-            self.__df__['Relay On'].iloc[n] = (",".join(str(k) for k in action))       
+            # self.__df__['Relay On'].iloc[n] = (",".join(str(k) for k in action))       
 
             self.keyactionlist.append(action)
 
@@ -83,6 +83,7 @@ class Testplan:
 
     def find_sync_keys(self):
         self.keygrouplist = list()
+        
         # keylist = self.keylist
         __templist__ = list([1 for k in self.keylist])
         for n,ka in enumerate(self.keylist):
@@ -97,18 +98,28 @@ class Testplan:
                         if self.__synccheck__(ka,kb):
                             group.list.append(kb)
                             __templist__[m+n+1]=0
+                            
+
                 # print(group.list)
                 self.keygrouplist.append(group)
+        
 
     def connet_keygroup(self):
+        
         for n,g in enumerate(self.keygrouplist):
             # print(g.list[0].pindict["controlA"])
             # net = Net(f'cbit{n}')
-            pin = self.creatpin(f'cbit{n}')
+            pin = self.creatpin(f'C{n}')
             g.connect("controlA",pin.net)
-            
-            print(g.list,[k.pindict["controlA"].net for k in g.list])
-
+            # print(g.list,[k.pindict["controlA"].net for k in g.list])
+        
+        self.cbitactionlist = list()
+        
+        for action in self.keyactionlist:
+            actioncbitdict = dict()
+            for k in action:
+                actioncbitdict[k.pindict["controlA"].net]=k.pindict["controlA"].net
+            self.cbitactionlist.append(actioncbitdict.values())
         self.__savetodf__()
         
     def __savetodf__(self):
@@ -121,7 +132,9 @@ class Testplan:
         # print(d)
         self.__pintable__ = pd.DataFrame(d)
         # print(self.__pintable__)
-
+        for n,cbit in enumerate(self.cbitactionlist):
+            self.__df__['Relay On'].iloc[n] = (",".join(str(c) for c in cbit))
+        print(self.__df__)
     def write(self):
         with pd.ExcelWriter(self.__filedir__,engine='openpyxl',mode="a",if_sheet_exists='replace') as writer:
             self.__df__.to_excel(writer,sheet_name = "Sheet1",index=False)   
